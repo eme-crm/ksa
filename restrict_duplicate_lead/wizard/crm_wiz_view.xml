@@ -9,16 +9,32 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
-                    <field name='note' nolabel="1" attrs="{'invisible': ['|',('lead_id', '!=', False),('partner_id', '!=', False)]}" readonly="1"/>
+                    <field name="lead_type" invisible="1"/>
+                    <p>Note: Duplication is checked based on Entered Mobile,Phone and Email</p><br/>
+                    <field name='note' nolabel="1" attrs="{'invisible': ['|',('lead_id', '!=', False),('partner_id', '!=', False)]}" readonly="1"/>                   
                     <group>
                         <group>
-                            <field name='partner_id' attrs="{'invisible': [('partner_id', '=', False)]}" readonly="1"/>
-                            <field name='lead_id' attrs="{'invisible': [('lead_id', '=', False)]}" readonly="1"/>
+                            <group attrs="{'invisible': [('partner_id','=',False)]}">
+                                <label for="partner_id" string="Existing Partner" />
+                            </group>
+                            <field name='partner_id' nolabel="1" attrs="{'invisible': [('partner_id', '=', False)]}" readonly="1"/>
+
+                            <group attrs="{'invisible': ['|',('lead_type','=', 'lead'),('lead_id','=',False)]}">
+                                <label for="lead_id"  string="Existing Opportunity" attrs="{'invisible': [('lead_id','=',False)]}"/>
+                            </group>
+                            <group attrs="{'invisible': ['|',('lead_type','=','oppo'),('lead_id','=',False)]}">
+                                <label for="lead_id" string="Existing Lead" attrs="{'invisible': [('lead_id','=',False)]}"/>
+                            </group>
+                            <field name='lead_id' nolabel="1"  attrs="{'invisible': [('lead_id', '=', False)]}" readonly="1"/>
                         </group>
                     </group>
                     
                 </sheet>
                 <footer>
+                    <button name="delete_data" 
+                                string="Delete record" 
+                                type="object" 
+                                class="btn-primary"/>
                     <button class="btn-secondary" special="cancel" string="Close"/>
                 </footer>
             </form>

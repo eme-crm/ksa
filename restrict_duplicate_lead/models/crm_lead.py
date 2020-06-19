@@ -22,7 +22,7 @@ class CrmLead(models.Model):
                     ('id', '!=', rec.id),
                 ])
                 for lead in existing_lead:
-                    existing_lead_list.append(lead.id)
+                    existing_lead_list.append(lead)
                 for partner in existing_partner:
                     existing_partner_list.append(partner.id)
             if rec.phone:
@@ -34,12 +34,11 @@ class CrmLead(models.Model):
                     ('id', '!=', rec.id),
                 ])
                 for lead in existing_lead:
-                    existing_lead_list.append(lead.id)
+                    existing_lead_list.append(lead)
                 for partner in existing_partner:
                     existing_partner_list.append(partner.id)
             if rec.email_from:
                 existing_partner = self.env['res.partner'].search([
-
                     ('email', '=', rec.email_from),
                 ])
                 existing_lead = self.env['crm.lead'].search([
@@ -47,7 +46,7 @@ class CrmLead(models.Model):
                     ('id', '!=', rec.id),
                 ])
                 for lead in existing_lead:
-                    existing_lead_list.append(lead.id)
+                    existing_lead_list.append(lead)
                 for partner in existing_partner:
                     existing_partner_list.append(partner.id)
             action = {
@@ -62,13 +61,12 @@ class CrmLead(models.Model):
                     'context': {
                         'default_partner_id': existing_partner_list[0]}})
                 return action
-
             elif existing_lead_list:
                 action.update(
-                    {'context': {'default_lead_id': existing_lead_list[0]}})
+                    {'context': {'default_lead_id': existing_lead_list[0].id}})
                 return action
             else:
                 action.update({
                     'context': {'default_note': "You do not have duplicate \
 record with this data"}})
-                return action
+            return action
