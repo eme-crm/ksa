@@ -1,11 +1,23 @@
 # See LICENSE file for full copyright and licensing details.
 
-from odoo import models
+from odoo import api, fields, models
 
 
 class CrmLead(models.Model):
 
     _inherit = "crm.lead"
+
+    name = fields.Char('Opportunity', required=False, index=True)
+
+    @api.model
+    def fields_view_get(self, view_id=None, view_type='form',
+                        toolbar=False, submenu=False):
+        res = super(CrmLead, self).fields_view_get(view_id=view_id,
+                                                   view_type=view_type,
+                                                   toolbar=toolbar, submenu=submenu)
+        if view_type == 'form' and self._context.get('remove_lead'):
+            self.browse(self._context.get('remove_lead')).unlink()
+        return res
 
     def check_lead(self):
         """Check lead or partner if it is duplicating."""
