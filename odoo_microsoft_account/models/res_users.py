@@ -51,7 +51,8 @@ class ResUsers(models.Model):
                 return None
             values = self._microsoft_generate_signup_values(provider, params)
             try:
-                _, login, _ = self.with_context(
+                company_id = self.env.ref('base.main_company')
+                _, login, _ = self.with_context(force_company=company_id.id
                     mail_create_nosubscribe=True).signup(values)
                 return login
             except (SignupError, UserError):
